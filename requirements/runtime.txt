@@ -1,0 +1,7 @@
+fastapi==0.136.1
+uvicorn==0.46.0
+pydantic==2.13.4
+pillow==12.2.0
+numpy==2.4.4
+opencv-python==4.13.0.92
+inference-sdk==1.8.2

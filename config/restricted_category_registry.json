@@ -1,0 +1,216 @@
+{
+  "version": "restricted_category_registry_runtime_v1",
+  "project": "SafeLens",
+  "purpose": "Map detector labels to restricted visual safety categories, risk levels, and default actions.",
+  "default_policy": {
+    "no_bbox_no_localized_cleanup": true,
+    "high_risk_no_image_conditioned_inpainting": true,
+    "medium_risk_requires_bbox_for_cleanup": true,
+    "low_risk_default_action": "observe_or_warn"
+  },
+  "model_branches": {
+    "tobacco_vape_roboflow_xrnvm": {
+      "enabled": true,
+      "provider": "roboflow",
+      "model_id": "cigarette-vape-detection-xrnvm/1",
+      "service_mode": "local_backend_wrapper",
+      "target_classes": [
+        "cigarette",
+        "vape"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup",
+      "requires_bbox": true
+    },
+    "alcohol_detector_future": {
+      "enabled": false,
+      "provider": "future_detector",
+      "model_id": null,
+      "target_classes": [
+        "beer",
+        "wine",
+        "liquor_bottle",
+        "alcohol_can",
+        "wine_glass",
+        "cocktail_glass"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup_or_warn",
+      "requires_bbox": true,
+      "status": "planned"
+    },
+    "gambling_detector_future": {
+      "enabled": false,
+      "provider": "future_detector",
+      "model_id": null,
+      "target_classes": [
+        "poker_chips",
+        "playing_cards",
+        "slot_machine",
+        "roulette_wheel"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup_or_warn",
+      "requires_bbox": true,
+      "status": "planned"
+    },
+    "drug_paraphernalia_detector_future": {
+      "enabled": false,
+      "provider": "future_detector",
+      "model_id": null,
+      "target_classes": [
+        "syringe",
+        "pill_bottle",
+        "drug_paraphernalia"
+      ],
+      "risk_level": "medium_or_high",
+      "default_action": "localized_cleanup_or_concealment",
+      "requires_bbox": true,
+      "status": "planned"
+    },
+    "weapon_like_detector_future": {
+      "enabled": false,
+      "provider": "future_detector",
+      "model_id": null,
+      "target_classes": [
+        "knife",
+        "handgun",
+        "rifle",
+        "weapon_like_object"
+      ],
+      "risk_level": "medium_or_high",
+      "default_action": "localized_blur_or_concealment",
+      "requires_bbox": true,
+      "status": "planned"
+    },
+    "alcohol_detector_iaeeq_v4": {
+      "enabled": true,
+      "provider": "roboflow",
+      "model_id": "alcohol-iaeeq/4",
+      "service_mode": "local_backend_wrapper",
+      "target_classes": [
+        "alcohol-bottle",
+        "beer-bottle",
+        "beer-glass",
+        "shot",
+        "wine-glass",
+        "alcohol bottle",
+        "beer bottle",
+        "beer glass",
+        "wine glass"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup_or_warn",
+      "requires_bbox": true,
+      "status": "experimental_enabled"
+    }
+  },
+  "categories": {
+    "tobacco_vape": {
+      "enabled": true,
+      "labels": [
+        "cigarette",
+        "vape"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup",
+      "requires_bbox": true,
+      "cleanup_allowed": true,
+      "replacement_mode": "bbox_guided_local_cleanup",
+      "model_branch": "tobacco_vape_roboflow_xrnvm",
+      "thresholds": {
+        "hit_confidence": 0.35,
+        "cleanup_confidence": 0.5
+      },
+      "description": "Tobacco and vape objects are localized medium-risk restricted objects."
+    },
+    "alcohol": {
+      "enabled": true,
+      "labels": [
+        "alcohol-bottle",
+        "beer-bottle",
+        "beer-glass",
+        "shot",
+        "wine-glass",
+        "alcohol bottle",
+        "beer bottle",
+        "beer glass",
+        "wine glass"
+      ],
+      "risk_level": "medium",
+      "default_action": "localized_object_cleanup_or_warn",
+      "requires_bbox": true,
+      "cleanup_allowed": true,
+      "replacement_mode": "bbox_guided_local_cleanup",
+      "model_branch": "alcohol_detector_iaeeq_v4",
+      "thresholds": {
+        "hit_confidence": 0.35,
+        "cleanup_confidence": 0.5
+      },
+      "description": "Alcohol-related localized visual objects. Requires a stronger dedicated detector before final claim.",
+      "status": "experimental_enabled",
+      "limitations": [
+        "Experimental detector branch. Validate on representative data and tune thresholds before relying on its results."
+      ]
+    },
+    "gambling": {
+      "enabled": false,
+      "labels": [
+        "poker_chips",
+        "playing_cards",
+        "slot_machine",
+        "roulette_wheel"
+      ],
+      "risk_level": "medium",
+      "default_action": "warn_or_localized_cleanup",
+      "requires_bbox": true,
+      "cleanup_allowed": true,
+      "replacement_mode": "bbox_guided_local_cleanup",
+      "model_branch": "gambling_detector_future",
+      "thresholds": {
+        "hit_confidence": 0.45,
+        "cleanup_confidence": 0.6
+      },
+      "description": "Gambling-related objects. Planned branch."
+    },
+    "drug_paraphernalia": {
+      "enabled": false,
+      "labels": [
+        "syringe",
+        "pill_bottle",
+        "drug_paraphernalia"
+      ],
+      "risk_level": "medium_or_high",
+      "default_action": "localized_cleanup_or_concealment",
+      "requires_bbox": true,
+      "cleanup_allowed": false,
+      "replacement_mode": "policy_dependent",
+      "model_branch": "drug_paraphernalia_detector_future",
+      "thresholds": {
+        "hit_confidence": 0.45,
+        "cleanup_confidence": 0.65
+      },
+      "description": "Drug-related objects require stricter policy review before cleanup."
+    },
+    "weapon_like": {
+      "enabled": false,
+      "labels": [
+        "knife",
+        "handgun",
+        "rifle",
+        "weapon_like_object"
+      ],
+      "risk_level": "medium_or_high",
+      "default_action": "localized_blur_or_concealment",
+      "requires_bbox": true,
+      "cleanup_allowed": false,
+      "replacement_mode": "policy_dependent",
+      "model_branch": "weapon_like_detector_future",
+      "thresholds": {
+        "hit_confidence": 0.5,
+        "cleanup_confidence": 0.7
+      },
+      "description": "Weapon-like objects are future safety-sensitive detector branches."
+    }
+  }
+}

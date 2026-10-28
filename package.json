@@ -1,0 +1,9 @@
+{
+  "name": "safelens-runtime-review",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Minimal SafeLens runtime assets for local review.",
+  "dependencies": {
+    "onnxruntime-web": "1.26.0"
+  }
+}

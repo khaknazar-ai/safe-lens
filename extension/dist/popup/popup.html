@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>SafeLens</title>
+    <style>
+      body {
+        width: 390px;
+        font-family: system-ui, sans-serif;
+        padding: 12px;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+
+      h2 {
+        margin: 0 0 8px;
+      }
+
+      p {
+        font-size: 13px;
+        color: #475569;
+        line-height: 1.4;
+      }
+
+      .box {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 10px;
+        margin-top: 10px;
+      }
+
+      .row {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13px;
+        margin: 4px 0;
+      }
+
+      .label {
+        font-weight: 700;
+      }
+
+      .value {
+        text-align: right;
+        max-width: 210px;
+        overflow-wrap: anywhere;
+      }
+
+      button {
+        width: 100%;
+        margin-top: 10px;
+        border: 0;
+        border-radius: 10px;
+        background: #0f172a;
+        color: white;
+        padding: 8px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .note {
+        font-size: 12px;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>SafeLens</h2>
+
+    <p>
+      Local visual safety filter is active.
+    </p>
+
+    <div class="box">
+      <div class="row"><span class="label">Pipeline:</span><span class="value" id="modelStatus">combined_observe_only</span></div>
+      <div class="row"><span class="label">Policy mode:</span><span class="value">observe_only</span></div>
+      <div class="row"><span class="label">Policy recommendation:</span><span class="value" id="lastPolicyRecommendedAction">none</span></div>
+      <div class="row"><span class="label">Policy category:</span><span class="value" id="lastPolicyCategory">none</span></div>
+      <div class="row"><span class="label">Policy severity:</span><span class="value" id="lastPolicySeverity">none</span></div>
+      <div class="row"><span class="label">Policy reason:</span><span class="value" id="lastPolicyReason">none</span></div>
+      <hr />
+      <div class="row"><span class="label">Risk level:</span><span class="value" id="lastRiskLevel">none</span></div>
+      <div class="row"><span class="label">Risk source:</span><span class="value" id="lastRiskSource">none</span></div>
+      <div class="row"><span class="label">Risk action:</span><span class="value" id="lastRiskAction">none</span></div>
+      <div class="row"><span class="label">Risk reason:</span><span class="value" id="lastRiskReason">none</span></div>
+      <div class="row"><span class="label">Risk target:</span><span class="value" id="lastRiskTargetLabel">none</span></div>
+      <div class="row"><span class="label">Target confidence:</span><span class="value" id="lastRiskTargetConfidence">0</span></div>
+      <hr />
+      
+      <hr />
+      <div class="row"><span class="label">Restricted detector OK:</span><span class="value" id="restrictedDetectorOk">0</span></div>
+      <div class="row"><span class="label">Restricted detector failed:</span><span class="value" id="restrictedDetectorFailed">0</span></div>
+      <div class="row"><span class="label">Restricted detector status:</span><span class="value" id="lastRestrictedDetectorStatus">none</span></div>
+      <div class="row"><span class="label">Restricted detector model:</span><span class="value" id="lastRestrictedDetectorModel">none</span></div>
+      <div class="row"><span class="label">Restricted detector reason:</span><span class="value" id="lastRestrictedDetectorReason">none</span></div>
+      <div class="row"><span class="label">Restricted detector latency:</span><span class="value" id="lastRestrictedDetectorLatencyMs">0 ms</span></div>
+      <div class="row"><span class="label">Restricted predictions:</span><span class="value" id="lastRestrictedDetectorPredictionCount">0</span></div>
+      <div class="row"><span class="label">Restricted target hits:</span><span class="value" id="lastRestrictedDetectorTargetHitCount">0</span></div>
+      <div class="row"><span class="label">Restricted hit summary:</span><span class="value" id="lastRestrictedDetectorHits">none</span></div>
+      <div class="row"><span class="label">Restricted detector error:</span><span class="value" id="lastRestrictedDetectorError">none</span></div>
+
+      <div class="row"><span class="label">Replacement OK:</span><span class="value" id="generationServiceOk">0</span></div>
+      <div class="row"><span class="label">Replacement failed:</span><span class="value" id="generationServiceFailed">0</span></div>
+      <div class="row"><span class="label">Replacement busy:</span><span class="value" id="generationServiceBusy">0</span></div>
+      <div class="row"><span class="label">Replacement applied:</span><span class="value" id="generatedReplacementApplied">0</span></div>
+      <div class="row"><span class="label">Replacement skipped:</span><span class="value" id="generatedReplacementSkipped">0</span></div>
+      <div class="row"><span class="label">Replacement status:</span><span class="value" id="lastGenerationServiceStatus">none</span></div>
+      <div class="row"><span class="label">Replacement backend:</span><span class="value" id="lastGenerationBackend">none</span></div>
+      <div class="row"><span class="label">Replacement mode:</span><span class="value" id="lastReplacementMode">none</span></div>
+      <div class="row"><span class="label">Replacement reason:</span><span class="value" id="lastReplacementReason">none</span></div>
+      <div class="row"><span class="label">Replacement latency:</span><span class="value" id="lastGenerationLatencyMs">0 ms</span></div>
+      <div class="row"><span class="label">Replacement URL:</span><span class="value" id="lastGeneratedImageUrl">none</span></div>
+      <div class="row"><span class="label">Service endpoint:</span><span class="value" id="lastGenerationEndpoint">none</span></div>
+      <div class="row"><span class="label">Cleanup report:</span><span class="value" id="lastInpaintingReportPath">none</span></div>
+      <div class="row"><span class="label">Cleanup output:</span><span class="value" id="lastInpaintingOutputUrl">none</span></div>
+      <div class="row"><span class="label">Scanned:</span><span class="value" id="scanned">0</span></div>
+      <div class="row"><span class="label">Readable:</span><span class="value" id="readable">0</span></div>
+      <div class="row"><span class="label">Decoded:</span><span class="value" id="decoded">0</span></div>
+      <div class="row"><span class="label">Tensor-ready:</span><span class="value" id="tensorReady">0</span></div>
+      <div class="row"><span class="label">Restored:</span><span class="value" id="restored">0</span></div>
+      <div class="row"><span class="label">Replaced:</span><span class="value" id="replaced">0</span></div>
+      <div class="row"><span class="label">Errors:</span><span class="value" id="errors">0</span></div>
+      <div class="row"><span class="label">Latency:</span><span class="value" id="lastLatencyMs">0 ms</span></div>
+    </div>
+
+    <div class="box">
+      <div class="row"><span class="label">NSFW OK:</span><span class="value" id="inferenceOk">0</span></div>
+      <div class="row"><span class="label">NSFW Failed:</span><span class="value" id="inferenceFailed">0</span></div>
+      <div class="row"><span class="label">NSFW model:</span><span class="value" id="lastModelVersion">none</span></div>
+      <div class="row"><span class="label">NSFW reason:</span><span class="value" id="lastInferenceReason">none</span></div>
+      <div class="row"><span class="label">Scores:</span><span class="value" id="lastProbabilities">none</span></div>
+    </div>
+
+    <div class="box">
+      <div class="row"><span class="label">Detector OK:</span><span class="value" id="detectorOk">0</span></div>
+      <div class="row"><span class="label">Detector Failed:</span><span class="value" id="detectorFailed">0</span></div>
+      <div class="row"><span class="label">Detector model:</span><span class="value" id="lastDetectorModelVersion">none</span></div>
+      <div class="row"><span class="label">Detector reason:</span><span class="value" id="lastDetectorReason">none</span></div>
+      <div class="row"><span class="label">Detections:</span><span class="value" id="lastDetectionCount">0</span></div><div class="row"><span class="label">Detection summary:</span><span class="value" id="lastDetections">none</span></div>
+      <div class="row"><span class="label">Restricted hits:</span><span class="value" id="lastRestrictedHitCount">0</span></div>
+      <div class="row"><span class="label">Hit summary:</span><span class="value" id="lastRestrictedHits">none</span></div>
+    </div>
+
+    <button id="refreshButton">Refresh stats</button><button id="resetButton">Reset stats</button>
+
+    <p class="note">
+      COCO detections are weak evidence only. No blocking or replacement policy is enabled.
+    </p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
